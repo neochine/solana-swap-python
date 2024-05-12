@@ -12,6 +12,7 @@ class SolanaTracker:
         self.connection = Client(rpc)
         self.keypair = keypair
         self.debug = debug
+        self.requests_session = requests.Session() 
 
     async def get_rate(self, from_token: str, to_token: str, amount: float, slippage: float) -> dict:
         params = {
@@ -22,7 +23,7 @@ class SolanaTracker:
         }
         url = f"{self.base_url}/rate"
         try:
-            response = requests.get(url, params=params)
+            response = self.requests_session.get(url, params=params)
             return response.json()
         except Exception as error:
             print("Error fetching rate:", error)
@@ -50,7 +51,7 @@ class SolanaTracker:
             params["priorityFee"] = str(priority_fee)
         url = f"{self.base_url}/swap"
         try:
-            response = requests.get(url, params=params)
+            response = self.requests_session.get(url, params=params)
             return response.json()
         except Exception as error:
             print("Error fetching swap instructions:", error)
